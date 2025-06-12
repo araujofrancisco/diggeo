@@ -47,6 +47,17 @@ cat ips.txt | diggeo
 diggeo --dig example.com
 ```
 
+## Configuration
+
+Before using `diggeo`, you must create a configuration file located at `/etc/diggeo.conf`.  
+This file should contain your API key in the following format:
+
+```
+api_key = your_api_key_here
+```
+
+Replace `your_api_key_here` with your actual API key.
+
 ## Project Structure
 
 - `src/` - Main source code directory
