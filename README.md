@@ -34,7 +34,18 @@ cargo build --release
 
 ### Usage
 
-_TODO: Provide CLI or library usage instructions._
+You can use **diggeo** either by passing IPs directly, piping from a file, or resolving domains:
+
+```bash
+# Query geolocation for multiple IPs
+diggeo 8.8.8.8 1.1.1.1
+
+# Query geolocation for IPs listed in a file
+cat ips.txt | diggeo
+
+# Resolve a domain and get geolocation for its IP(s)
+diggeo --dig example.com
+```
 
 ## Project Structure
 
