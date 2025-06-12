@@ -20,9 +20,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --release --verbose
       - name: Run tests
         run: cargo test --verbose
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diggeo-binary
+          path: target/release/diggeo
 
   release:
     needs: build
@@ -30,7 +35,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: diggeo-binary
+          path: .
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,3 +50,12 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./diggeo
+          asset_name: diggeo
+          asset_content_type: application/octet-stream
