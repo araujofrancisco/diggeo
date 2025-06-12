@@ -1,10 +1,9 @@
 use std::collections::HashSet;
 use std::fs;
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, IsTerminal};
 use std::net::{IpAddr, ToSocketAddrs};
 use std::process;
 
-use atty::Stream;
 use clap::Parser;
 use reqwest;
 use serde_json::Value;
@@ -109,8 +108,9 @@ fn main() {
     } else if !args.ips.is_empty() {
         // Use the provided IP addresses from command-line arguments.
         ips = args.ips;
-    } else if !atty::is(Stream::Stdin) {
         // No arguments; perhaps the input is being piped.
+    } else if !io::stdin().is_terminal() {
+        // If input is being piped, read IP addresses from standard input.        
         let stdin = io::stdin();
         for line in stdin.lock().lines() {
             match line {
